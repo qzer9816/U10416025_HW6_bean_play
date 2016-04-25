@@ -187,6 +187,56 @@ public class BeanGame extends Application {
 	Scene scene = new Scene(pane, 200 , 250 );
        	primaryStage.setScene(scene);
       	primaryStage.setTitle("Bean Game");
+      	primaryStage.setResizable(false);
         primaryStage.show();
+        
+        pane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+	@Override
+	public void handle(MouseEvent event) {
+	double ballX = 100;
+        double ballY = 75;
+	double moveX = 10;
+	double moveY = 15;
+        int down = 7;
+	Random random = new Random();
+	Random r = new Random();
+	Paint[] bc = {Color.BLUE,Color.RED,Color.GRAY,Color.BROWN,Color.BLACK,Color.GREEN,Color.ORANGE};
+	int ballColor =  random.nextInt(7);
+		
+	//create balls
+        Circle circle = new Circle (100, 60, 3, (Paint)bc[ballColor]);
+        pane.getChildren().add(circle);
+		
+	//create new path
+        Path path = new Path();
+        path.getElements().add(new MoveTo(100, 60));
+
+        //ball move
+	for(int i = 0; i <= down ; i++){
+	    if(i == 0){
+			ballX = ballX;
+			ballY = ballY;
+		}else if(Math.abs(r.nextInt()) % 2 == 0){
+			ballX = ballX + moveX;
+			ballY = ballY + moveY;
+		}else{
+		    ballX = ballX - moveX;
+		    ballY = ballY + moveY;
+		}
+		path.getElements().add(new LineTo(ballX, ballY));
+	}
+		
+	path.getElements().add(new LineTo(ballX, ballY+ 15));
+
+        PathTransition pt = new PathTransition();
+        pt.setDuration(Duration.millis(3000));
+        pt.setNode(circle);
+        pt.setPath(path);
+        pt.setOrientation(PathTransition.OrientationType.NONE);
+        pt.setCycleCount(1);
+        pt.setAutoReverse(false);
+        pt.play();
+        }
+    });
    }
 }
